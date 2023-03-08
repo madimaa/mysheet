@@ -19,9 +19,9 @@ var DB_PASS string
 var database *gorm.DB
 
 func main() {
-	DB_URL = Get("DB_URL", "mysheet-db-9416.7tt.cockroachlabs.cloud")
-	DB_USER = Get("DB_USER", "adam")
-	DB_PASS = Get("DB_PASS", "FpoxtAiv442DLoIQHWRJfQ")
+	DB_URL = Get("DB_URL", "")
+	DB_USER = Get("DB_USER", "")
+	DB_PASS = Get("DB_PASS", "")
 
 	dsn := fmt.Sprintf("postgresql://%s:%s@%s:26257/defaultdb?sslmode=verify-full", DB_USER, DB_PASS, DB_URL)
 	var err error
