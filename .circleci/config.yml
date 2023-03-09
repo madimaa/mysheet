@@ -27,9 +27,9 @@ jobs:
           version: 20.10.14
           docker_layer_caching: true
       - run:
-          name: Docker login
+          name: build image
           command: |
-            TAG=madima/mysheet:${CIRCLE_WORKFLOW_ID}
+            TAG=madima/mysheet:${CIRCLE_WORKFLOW_ID:0:7}
             docker build -t $TAG -f .circleci/Dockerfile_backend .
             echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
             docker push $TAG
