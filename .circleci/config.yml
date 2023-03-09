@@ -23,15 +23,17 @@ jobs:
       - image: cimg/base:2021.04
     steps:
       - checkout
+      - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: true
       - run:
           name: Docker login
-          command: echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-      - run:
-          name: Docker build
-          command: docker build -t madima/mysheet:${CIRCLE_WORKFLOW_ID} -f .circleci/Dockerfile_backend .
-      - run:
-          name: Docker push
-          command: docker push madima/mysheet:${CIRCLE_WORKFLOW_ID}
+          command: |
+            TAG=madima/mysheet:${CIRCLE_WORKFLOW_ID}
+            docker build -t $TAG -f .circleci/Dockerfile_backend .
+            echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+            docker push $TAG
+            docker logout
 
 workflows:
   default:
