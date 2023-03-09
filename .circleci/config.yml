@@ -9,6 +9,7 @@ jobs:
       - run:
           name: get linter
           command: |
+            cd /
             wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s 
             golangci-lint --version
       - run:
