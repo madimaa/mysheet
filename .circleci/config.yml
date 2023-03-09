@@ -3,7 +3,7 @@ version: 2.1
 jobs:
   lint-backend:
     docker:
-      - image: alpine:3.17
+      - image: golang:1.20.2-alpine3.17
     steps:
       - checkout
       - run:
