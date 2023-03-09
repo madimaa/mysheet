@@ -30,7 +30,6 @@ func main() {
 		log.Fatal("failed to connect database", err)
 	}
 
-	var e *echo.Echo
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
