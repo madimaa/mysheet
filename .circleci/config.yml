@@ -1,0 +1,31 @@
+version: 2
+
+jobs:
+  lint-backend:
+    docker:
+      - image: alpine:3.17
+    steps:
+      - checkout
+      - run:
+          name: get linter
+          command: wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s 
+      - run:
+          name: lint backend
+          command: |
+            cd backend
+            golangci-lint run
+
+  build-backend-image:
+    docker:
+      - image: ubuntu-2204:2022.04.2
+    steps:
+      - checkout
+      - run:
+          name: Docker login
+          command: echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+      - run:
+          name: Docker build
+          command: docker build -t madima/mysheet:${CIRCLE_WORKFLOW_ID} -f .circleci/Dockerfile_backend .
+      - run:
+          name: Docker push
+          command: docker push madima/mysheet:${CIRCLE_WORKFLOW_ID}
