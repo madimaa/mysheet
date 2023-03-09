@@ -1,0 +1,20 @@
+# Step 1:
+FROM golang:1.20.2-alpine3.17 AS builder
+
+RUN apk update && apk add --no-cache make
+
+WORKDIR /app
+COPY backend/ /app
+RUN go mod download
+
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64\
+    go build -ldflags="-w -s" -o /mysheet
+
+# Step 2:
+FROM alpine:3.17
+
+COPY --from=builder /mysheet /mysheet
+
+EXPOSE 8080
+
+ENTRYPOINT ["/mysheet"]
