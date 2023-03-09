@@ -20,7 +20,7 @@ jobs:
 
   build-backend-image:
     docker:
-      - image: circleci/buildpack-deps:xenial-dind
+      - image: cimg/base:2021.04
     steps:
       - checkout
       - run:
