@@ -33,6 +33,10 @@ func main() {
 	e := echo.New()
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}))
 
 	e.GET("/list", list)
 	e.GET("/test", test)
@@ -49,15 +53,12 @@ func list(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, fmt.Sprintf("Error during select: %s\n", err))
 	}
 
-	response := &ListDto{
-		Items: make([]ItemDto, 0),
-	}
-
+	res := make([]string, 0)
 	for _, item := range items {
-		response.Items = append(response.Items, ItemDto{Id: item.ID, Name: item.Name})
+		res = append(res, item.Name)
 	}
 
-	return c.JSON(http.StatusOK, response)
+	return c.JSON(http.StatusOK, res)
 }
 
 func add(c echo.Context) error {
