@@ -37,7 +37,7 @@ jobs:
 
   lint-frontend:
     docker:
-      - image: madima/flutterci:latest
+      - image: madima/flutterci:3.7.7
     steps:
       - checkout
       - run:
