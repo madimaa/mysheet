@@ -162,7 +162,6 @@ class DataHandler {
   Future<http.Response> sendData(String name) async {
     print(name);
     var body = json.encode(<String, String>{'name': name});
-    print('body: $body');
     try {
       return await http.post(
         Uri.parse('http://backend/add'),
@@ -180,19 +179,15 @@ class DataHandler {
   }
 
   Future<List<String>> getList() async {
-    print("get");
     var url = Uri.http('backend', '/list');
-    print('$url');
     try {
       var response = await http.get(url);
-      print('$response');
       if (response.statusCode == 200) {
         var jsonResponse = List<String>.from(json.decode(response.body));
-        print(jsonResponse);
         return jsonResponse;
       }
     } catch (err) {
-      print('Err: $err');
+      throw Exception(err);
     }
     return List.empty(growable: true);
   }
