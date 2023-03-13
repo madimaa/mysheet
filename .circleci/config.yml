@@ -12,10 +12,10 @@ jobs:
             wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
             chmod +x /bin/hadolint
       - run:
-          name: link backend Dockerfile
+          name: lint backend Dockerfile
           command: hadolint .circleci/Dockerfile_backend
       - run:
-          name: link frontend Dockerfile
+          name: lint frontend Dockerfile
           command: hadolint .circleci/Dockerfile_frontend
 
   lint-backend:
