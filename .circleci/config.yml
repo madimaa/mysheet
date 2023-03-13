@@ -37,19 +37,12 @@ jobs:
 
   lint-frontend:
     docker:
-      - image: debian:latest
+      - image: madima/flutterci:3.7.7
     steps:
       - checkout
       - run:
-          name: setup flutter
+          name: check flutter
           command: |
-            apt-get update && apt-get install -y git curl unzip && apt-get clean
-            git clone https://github.com/flutter/flutter.git /usr/local/flutter
-            export PATH="/usr/local/flutter/bin:/usr/local/flutter/bin/cache/dart-sdk/bin:$PATH"
-
-            flutter doctor -v
-            flutter channel master
-            flutter upgrade
             flutter --version
       - run:
           name: lint frontend
