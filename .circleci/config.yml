@@ -29,8 +29,47 @@ jobs:
       - run:
           name: build image
           command: |
-            TAG=madima/mysheet:${CIRCLE_WORKFLOW_ID:0:7}
+            TAG=madima/mysheet-backend:${CIRCLE_WORKFLOW_ID:0:7}
             docker build -t $TAG -f .circleci/Dockerfile_backend .
+            echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+            docker push $TAG
+            docker logout
+
+  lint-frontend:
+    docker:
+      - image: debian:latest
+    steps:
+      - checkout
+      - run:
+          name: setup flutter
+          command: |
+            apt-get update && apt-get install -y git curl unzip && apt-get clean
+            git clone https://github.com/flutter/flutter.git /usr/local/flutter
+            export PATH="/usr/local/flutter/bin:/usr/local/flutter/bin/cache/dart-sdk/bin:$PATH"
+
+            flutter doctor -v
+            flutter channel master
+            flutter upgrade
+            flutter --version
+      - run:
+          name: lint frontend
+          command: |
+            cd frontend/mysheet
+            flutter analyze
+
+  build-frontend-image:
+    docker:
+      - image: cimg/base:2021.04
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.14
+          docker_layer_caching: true
+      - run:
+          name: build image
+          command: |
+            TAG=madima/mysheet-frontend:${CIRCLE_WORKFLOW_ID:0:7}
+            docker build -t $TAG -f .circleci/Dockerfile_frontend .
             echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
             docker push $TAG
             docker logout
@@ -39,5 +78,8 @@ workflows:
   default:
     jobs:
       - lint-backend
+      - lint-frontend
       - build-backend-image:
           requires: [lint-backend]
+      - build-frontend-image:
+          requires: [lint-frontend]
