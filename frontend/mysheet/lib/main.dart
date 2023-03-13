@@ -160,7 +160,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class DataHandler {
   Future<http.Response> sendData(String name) async {
-    print(name);
     var body = json.encode(<String, String>{'name': name});
     try {
       return await http.post(
