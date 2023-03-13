@@ -87,9 +87,10 @@ jobs:
 workflows:
   default:
     jobs:
+      - lint-dockerfiles
       - lint-backend
       - lint-frontend
       - build-backend-image:
-          requires: [lint-backend]
+          requires: [lint-backend, lint-dockerfiles]
       - build-frontend-image:
-          requires: [lint-frontend]
+          requires: [lint-frontend, lint-dockerfiles]
